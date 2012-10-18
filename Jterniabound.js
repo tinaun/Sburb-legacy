@@ -97,7 +97,12 @@ Sburb.testCompatibility = function(div, levelName, includeDevTools) {
         }
         xhr.onabort = function() { Modernizr.addTest('xhrblob', function () { return false; }); };
         xhr.onerror = function() { Modernizr.addTest('xhrblob', function () { return false; }); };
-        xhr.send();
+        try{
+	xhr.send();
+        } catch (e) {
+         console.log(e);
+         window.alert("To run locally on chrome, please enable --allow-file-access-from-files");	
+        }
         
         // Test Arraybuffer response
         xhr = new XMLHttpRequest();
