@@ -606,6 +606,20 @@ commands.walk = function(info){
 	}
 }
 
+commands.openLink = function(info){
+     var url = parseURLstring(info);
+     var actions = [];
+	 
+	 actions.push(new Sburb.Action("openDirect", url, "Go To "+info+"?"));
+	 actions.push(new Sburb.Action("cancel",null,"Cancel"));
+	 Sburb.chooser.choices = actions;
+	 Sburb.chooser.beginChoosing(Sburb.Stage.x+200,Sburb.Stage.y+300);
+}
+
+commands.openDirect = function(url){
+    window.open(url, "outside", "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes");
+}
+
 //blank utlity function
 //syntax: none
 commands.cancel = function(){
@@ -650,6 +664,12 @@ function parseTriggerString(string){
 		}
 	}
 	return triggers;
+}
+
+function parseURLstring(string){
+    
+    string = "http://" + string;
+    return string;
 }
 
 
