@@ -16,6 +16,7 @@ EX:
 Inserting underscores underlines the text between them, e.g. _blah blah blah_
 Inserting /0xff00ff colours all following text with the specificed colour.
 Insterting /0x/ ends the previously specified behaviour.
+Links are parsed (target)[text], at least for now
 */
 
 
@@ -158,7 +159,7 @@ Sburb.FontEngine.prototype.parseFormatting = function(){
 	
 		this.parseEscapes();
 	
-		
+		this.parseLinks();
 	
 		this.parseUnderlines();
 	
@@ -238,6 +239,41 @@ Sburb.FontEngine.prototype.parseUnderlines = function(){
 		}
 		this.text = this.text.substring(0,index)+this.text.substring(index+1,this.text.length);
 		this.realignFormatQueue(index,1);
+	}
+}
+
+//just styling now
+Sburb.FontEngine.prototype.parseLinks = function(){
+	var escapePoint = 0;
+	var index = 0;
+	var count = 0;
+	var links = [];
+	while(true){
+		count++;
+	    index = this.text.indexOf("(",index);
+		endIndex = this.text.indexOf(")");
+		this.text = this.text.substr(0, index) + this.text.substr(endIndex + 1);
+		index = this.text.indexOf("[");
+		
+		if(index==-1){
+			break;
+		}
+		closeIndex = this.text.indexOf("]");
+		this.text = this.text.substr(0, closeIndex) + this.text.substr(closeIndex + 1);
+		var closing = false;
+		for(var i=this.formatQueue.length-1;i>=0;i--){
+			if(this.formatQueue[i].type=="link" && this.formatQueue[i].maxIndex==999999){
+				this.formatQueue[i].maxIndex=index;
+				closing = true;
+				break;
+			}
+		}
+		if(!closing){
+			this.addToFormatQueue(new Sburb.FormatRange(index,closeIndex,"link"));
+		}
+		this.text = this.text.substring(0,index)+this.text.substring(index+1,this.text.length);
+		this.realignFormatQueue(index,1);
+		    
 	}
 }
 
