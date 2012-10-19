@@ -703,9 +703,15 @@ function parseTriggerString(string){
 }
 
 function parseURLstring(string){
-    if(string.indexOf("http://") == -1){
-       string = "http://" + string;
-    }
+    var allowed = ["com", "net", "org", "biz", "info"];
+    var parts = string.split("://");
+	if (parts.length == 1){
+	    var domain = string.split("/")[0];
+		if(domain.indexOf(".") != -1){
+		   return "http://" + parts[0];
+		}
+		return string;
+	}
     return string;
 }
 
