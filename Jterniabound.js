@@ -127,7 +127,6 @@ Sburb.testCompatibility = function(div, levelName, includeDevTools) {
     
     // Make sure Modernizr finished loading async tests
     if(!('xhrblob' in Modernizr && 'xhrarraybuffer' in Modernizr && 'datauri' in Modernizr)) {
-        console.log("Still waiting for Modernizr to load...");
         setTimeout(function() { Sburb.initialize(div, levelName, includeDevTools); }, 200);
         Sburb.crashed = true;
         return;
@@ -616,6 +615,7 @@ function chainAction(){
 				continue;
 			}
 		}
+        chainActionInQueue(queue);
 	}
 }    
 
@@ -653,7 +653,7 @@ Sburb.performAction = function(action, queue){
 			return null;
 		}
 		if((!queue)||(queue==Sburb)) {
-			if(action.silent==true) {
+			if(action.silent===true) {
 				queue=new Sburb.ActionQueue(action);
 			} else {
 				var options=action.silent.split(":");
