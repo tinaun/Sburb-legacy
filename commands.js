@@ -64,6 +64,7 @@ commands.teleport = function(info){
 //syntax: newPlayerName
 commands.changeChar = function(info){
 	Sburb.char.becomeNPC();
+	Sburb.char.moveNone();
 	Sburb.char.walk();
 	Sburb.destFocus = Sburb.char = Sburb.sprites[info];
 	Sburb.char.becomePlayer();
@@ -271,7 +272,7 @@ commands.macro = function(info){
 	}
 	var newQueue = Sburb.performAction(action);
 	if(newQueue) {
-		return new Sburb.Trigger("waitFor,"+newQueue.id);
+		return new Sburb.Trigger("noActions,"+newQueue.id);
 	}
 }
 
@@ -587,21 +588,8 @@ commands.setGameState = function(info) {
 commands.goBack = function(info){
 	var params = parseParams(info);
 	var character = parseCharacterString(params[0]);
-	var vx = 0; vy = 0;
-	if(character.facing=="Front"){
-		vx = 0; 
-		vy = -character.speed;
-	}else if(character.facing=="Back"){
-		vx = 0; 
-		vy = character.speed;
-	}else if(character.facing=="Left"){
-		vx = character.speed;
-		vy = 0;
-	}else if(character.facing=="Right"){
-		vx = -character.speed; 
-		vy = 0;
-	}
-	character.tryToMove(vx,vy,Sburb.curRoom);
+	character.x = character.oldX;
+	character.y = character.oldY;
 }
 //tryToTrigger the given triggers in order, if one succeeds, don't do the rest (they are like an else-if chain)
 //syntax: Sburbml trigger syntax
